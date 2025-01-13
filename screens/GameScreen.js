@@ -1,7 +1,6 @@
 import { Alert, FlatList, StyleSheet, Text, View } from "react-native";
 import Title from "../components/ui/Title";
 import PrimaryButton from "../components/ui/PrimaryButton";
-import Colors from "../constants/colors";
 import { Ionicons } from '@expo/vector-icons';
 import { useEffect, useState } from "react";
 import NumberContainer from "../components/game/NumberContainer";
@@ -9,21 +8,15 @@ import Card from "../components/ui/Card";
 import InstructionText from "../components/ui/InstructionText";
 import GuessLogItem from "../components/game/GuessLogItem";
 
-function generateRandomBetween(min, max, exclude) {
-    const rndNum = Math.floor(Math.random() * (max - min)) + min;
-
-    if (rndNum === exclude) {
-        return generateRandomBetween(min, max, exclude);
-    }
-
-    return rndNum;
+function generatePivotNumber(min, max) {
+    return parseInt((max+min)/2);
 }
 
 let minBoundary = 1;
 let maxBoundary = 100;
 
 function GameScreen({userNumber, onGameOver}) {
-    const initialGuess = generateRandomBetween(1, 100, userNumber);
+    const initialGuess = generatePivotNumber(1, 100);
     const [currentGuess, setCurrentGuess] = useState(initialGuess);
     const [guessRounds, setGuessRounds] = useState([]);
 
@@ -51,12 +44,12 @@ function GameScreen({userNumber, onGameOver}) {
             maxBoundary = currentGuess;
         }
         else {
-            minBoundary = currentGuess - 1;
+            minBoundary = currentGuess;
         }
 
-        const newRndNumber = generateRandomBetween(minBoundary, maxBoundary, currentGuess);
+        const guessedNumber = generatePivotNumber(minBoundary, maxBoundary);
         setGuessRounds(prevGuessRounds => [currentGuess, ...prevGuessRounds]);
-        setCurrentGuess(newRndNumber);
+        setCurrentGuess(guessedNumber);
     }
 
     const guessRoundsListLength = guessRounds.length;
