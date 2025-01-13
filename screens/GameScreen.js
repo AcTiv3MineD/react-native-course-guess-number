@@ -9,14 +9,24 @@ import InstructionText from "../components/ui/InstructionText";
 import GuessLogItem from "../components/game/GuessLogItem";
 
 function generatePivotNumber(min, max) {
-    return parseInt((max+min)/2);
+    return Math.floor((max+min)/2);
+}
+
+function generateRandomBetween(min, max, exclude) {
+    const rndNum = Math.floor(Math.random() * (max - min)) + min;
+
+    if (rndNum === exclude) {
+        return generateRandomBetween(min, max, exclude);
+    }
+
+    return rndNum;
 }
 
 let minBoundary = 1;
 let maxBoundary = 100;
 
 function GameScreen({userNumber, onGameOver}) {
-    const initialGuess = generatePivotNumber(1, 100);
+    const initialGuess = generateRandomBetween(1, 99);
     const [currentGuess, setCurrentGuess] = useState(initialGuess);
     const [guessRounds, setGuessRounds] = useState([]);
 
